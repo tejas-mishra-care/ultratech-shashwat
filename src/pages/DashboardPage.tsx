@@ -57,7 +57,7 @@ export const DashboardPage = () => {
           transition={{ duration: 0.4 }}
         >
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            Welcome back, {user?.name || 'User'}!
+            Welcome back, {user?.email?.split('@')[0] || 'User'}!
           </h2>
           <p className="text-muted-foreground">
             Manage your certification projects and track progress
