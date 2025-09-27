@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
+import { CapacitorService } from "@/lib/capacitor-plugins";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -23,6 +24,11 @@ const App = () => {
 
   useEffect(() => {
     initialize();
+    
+    // Set up native app configurations
+    if (CapacitorService.isNative()) {
+      CapacitorService.setStatusBarStyle(false);
+    }
   }, [initialize]);
 
   return (

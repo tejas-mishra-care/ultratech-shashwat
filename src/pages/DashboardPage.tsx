@@ -2,12 +2,14 @@ import { useState } from "react";
 import { MobileHeader } from "@/components/ui/mobile-header";
 import { ProjectCard } from "@/components/ui/project-card";
 import { Button } from "@/components/ui/button";
+import { CameraButton } from "@/components/ui/camera-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useProjectStore } from "@/store/projectStore";
 import { useAuthStore } from "@/store/authStore";
 import { motion } from "framer-motion";
 import { Plus, Target, Award, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { CapacitorService } from "@/lib/capacitor-plugins";
 
 export const DashboardPage = () => {
   const { projects } = useProjectStore();
@@ -29,6 +31,12 @@ export const DashboardPage = () => {
 
   const handleOpenProject = (project: any) => {
     navigate(`/project/${project.id}`);
+  };
+
+  const handlePhotoTaken = (photo: any, location: any) => {
+    console.log('Photo taken:', photo);
+    console.log('Location:', location);
+    // Handle photo and location data
   };
 
   return (
@@ -90,7 +98,7 @@ export const DashboardPage = () => {
 
         {/* Quick Actions */}
         <motion.div 
-          className="mb-6"
+          className="mb-6 space-y-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
@@ -103,6 +111,13 @@ export const DashboardPage = () => {
             <Plus className="h-5 w-5 mr-2" />
             Start New Certification Project
           </Button>
+          
+          {CapacitorService.isNative() && (
+            <CameraButton 
+              onPhotoTaken={handlePhotoTaken}
+              className="w-full h-12 text-base font-medium"
+            />
+          )}
         </motion.div>
 
         {/* Projects List */}
