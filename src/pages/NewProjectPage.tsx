@@ -11,22 +11,13 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const certificationStandards = [
-  { value: "leed", label: "LEED (Leadership in Energy and Environmental Design)" },
-  { value: "breeam", label: "BREEAM (Building Research Establishment Environmental Assessment Method)" },
-  { value: "green-star", label: "Green Star" },
-  { value: "energy-star", label: "ENERGY STAR" },
-  { value: "living-building", label: "Living Building Challenge" },
+  { value: "NEST_PLUS", label: "NEST PLUS" },
+  { value: "NEST", label: "NEST" },
 ];
 
 const buildingTypes = [
-  { value: "office", label: "Office Building" },
-  { value: "retail", label: "Retail Space" },
-  { value: "residential", label: "Residential" },
-  { value: "industrial", label: "Industrial/Manufacturing" },
-  { value: "healthcare", label: "Healthcare Facility" },
-  { value: "education", label: "Educational Institution" },
-  { value: "hospitality", label: "Hospitality/Hotels" },
-  { value: "mixed-use", label: "Mixed-Use Development" },
+  { value: "New", label: "New Building" },
+  { value: "Existing", label: "Existing Building" },
 ];
 
 export const NewProjectPage = () => {
