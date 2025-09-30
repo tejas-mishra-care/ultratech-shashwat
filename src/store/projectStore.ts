@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface ProjectDetails {
+  projectTitle: string;
   certificationStandard: string;
   buildingType: string;
   registrationNumber: string;
@@ -28,6 +29,14 @@ export interface Project {
   uploadedEvidence: Record<string, ProjectImage[]>;
   createdAt: Date;
   lastModified: Date;
+  // Computed properties for UI compatibility
+  title: string;
+  certificationStandard: string;
+  buildingType: string;
+  status: 'draft' | 'in-progress' | 'completed';
+  score: number;
+  maxScore: number;
+  images: number;
 }
 
 export interface ProjectImage {
@@ -73,7 +82,33 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
 
       if (error) throw error;
 
-      set({ projects: data || [] });
+      const projects = (data || []).map((project: any) => {
+        const projectDetails = project.project_details as ProjectDetails;
+        const criteriaSelections = project.criteria_selections as Record<string, any>;
+        const uploadedEvidence = project.uploaded_evidence as Record<string, ProjectImage[]>;
+        const status = Object.keys(criteriaSelections || {}).length > 0 ? 'in-progress' as const : 'draft' as const;
+        
+        return {
+          id: project.id,
+          ownerUid: project.owner_uid,
+          projectDetails,
+          criteriaSelections,
+          otherAutomationDetails: project.other_automation_details as Record<string, string>,
+          uploadedEvidence,
+          createdAt: new Date(project.created_at),
+          lastModified: new Date(project.last_modified),
+          // Computed properties
+          title: projectDetails?.projectTitle || 'Untitled Project',
+          certificationStandard: projectDetails?.certificationStandard || '',
+          buildingType: projectDetails?.buildingType || '',
+          status,
+          score: 0, // Will be calculated from criteria
+          maxScore: 79, // Default max score
+          images: Object.values(uploadedEvidence || {}).flat().length
+        };
+      });
+
+      set({ projects });
     } catch (error) {
       console.error('Error loading projects:', error);
     } finally {
@@ -89,12 +124,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
 
       const newProject = {
         owner_uid: user.id,
-        project_details: projectDetails,
-        criteria_selections: {},
-        other_automation_details: {},
-        uploaded_evidence: {},
-        created_at: new Date(),
-        last_modified: new Date()
+        project_details: projectDetails as any,
+        criteria_selections: {} as any,
+        other_automation_details: {} as any,
+        uploaded_evidence: {} as any
       };
 
       const { data, error } = await supabase
@@ -105,15 +138,27 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
 
       if (error) throw error;
 
+      if (!data) return null;
+
+      const dbProjectDetails = data.project_details as any;
+      
       const project: Project = {
         id: data.id,
         ownerUid: data.owner_uid,
-        projectDetails: data.project_details,
-        criteriaSelections: data.criteria_selections,
-        otherAutomationDetails: data.other_automation_details,
-        uploadedEvidence: data.uploaded_evidence,
+        projectDetails: dbProjectDetails as ProjectDetails,
+        criteriaSelections: (data.criteria_selections as any) || {},
+        otherAutomationDetails: (data.other_automation_details as any) || {},
+        uploadedEvidence: (data.uploaded_evidence as any) || {},
         createdAt: new Date(data.created_at),
-        lastModified: new Date(data.last_modified)
+        lastModified: new Date(data.last_modified),
+        // Computed properties
+        title: dbProjectDetails?.projectTitle || 'Untitled Project',
+        certificationStandard: dbProjectDetails?.certificationStandard || '',
+        buildingType: dbProjectDetails?.buildingType || '',
+        status: 'draft' as const,
+        score: 0,
+        maxScore: 79,
+        images: 0
       };
 
       set(state => ({
@@ -132,12 +177,17 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   
   updateProject: async (id, updates) => {
     try {
+      const dbUpdates: any = {};
+      
+      // Map Project fields to database fields
+      if (updates.projectDetails) dbUpdates.project_details = updates.projectDetails;
+      if (updates.criteriaSelections) dbUpdates.criteria_selections = updates.criteriaSelections;
+      if (updates.otherAutomationDetails) dbUpdates.other_automation_details = updates.otherAutomationDetails;
+      if (updates.uploadedEvidence) dbUpdates.uploaded_evidence = updates.uploadedEvidence;
+
       const { error } = await supabase
         .from('projects')
-        .update({
-          ...updates,
-          last_modified: new Date()
-        })
+        .update(dbUpdates)
         .eq('id', id);
 
       if (error) throw error;

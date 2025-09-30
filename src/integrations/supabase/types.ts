@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      projects: {
+        Row: {
+          created_at: string
+          criteria_selections: Json
+          id: string
+          last_modified: string
+          other_automation_details: Json
+          owner_uid: string
+          project_details: Json
+          uploaded_evidence: Json
+        }
+        Insert: {
+          created_at?: string
+          criteria_selections?: Json
+          id?: string
+          last_modified?: string
+          other_automation_details?: Json
+          owner_uid: string
+          project_details: Json
+          uploaded_evidence?: Json
+        }
+        Update: {
+          created_at?: string
+          criteria_selections?: Json
+          id?: string
+          last_modified?: string
+          other_automation_details?: Json
+          owner_uid?: string
+          project_details?: Json
+          uploaded_evidence?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

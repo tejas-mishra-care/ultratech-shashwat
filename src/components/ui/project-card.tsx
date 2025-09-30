@@ -81,7 +81,7 @@ export const ProjectCard = ({ project, onOpen, onDelete }: ProjectCardProps) => 
               </div>
               <div className="flex items-center gap-1">
                 <FileText className="h-3 w-3" />
-                <span>{project.images.length} photos</span>
+                <span>{project.images} photos</span>
               </div>
             </div>
 

@@ -28,7 +28,7 @@ export const NewProjectPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     if (!projectTitle.trim() || !certificationStandard || !buildingType) {
       toast({
         title: "Missing Information",
@@ -38,14 +38,35 @@ export const NewProjectPage = () => {
       return;
     }
 
-    createProject(projectTitle.trim(), certificationStandard, buildingType);
+    const projectDetails = {
+      projectTitle: projectTitle.trim(),
+      certificationStandard,
+      buildingType,
+      registrationNumber: '',
+      ownerName: '',
+      mobileNumber: '',
+      emailAddress: '',
+      projectLocation: '',
+      fullAddress: '',
+      permissionAuthority: '',
+      projectType: '',
+      numberOfFloors: 1,
+      totalSiteArea: 0,
+      totalBuiltUpArea: 0,
+      landscapeArea: 0,
+      twoWheelerParking: 0,
+    };
+
+    const project = await createProject(projectDetails);
     
-    toast({
-      title: "Project Created!",
-      description: `${projectTitle} has been created successfully`,
-    });
-    
-    navigate('/dashboard');
+    if (project) {
+      toast({
+        title: "Project Created!",
+        description: `${projectTitle} has been created successfully`,
+      });
+      
+      navigate('/dashboard');
+    }
   };
 
   return (
