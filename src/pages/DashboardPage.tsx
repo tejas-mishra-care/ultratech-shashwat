@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { MobileHeader } from "@/components/ui/mobile-header";
 import { ProjectCard } from "@/components/ui/project-card";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,13 @@ import { useNavigate } from "react-router-dom";
 import { CapacitorService } from "@/lib/capacitor-plugins";
 
 export const DashboardPage = () => {
-  const { projects } = useProjectStore();
+  const { projects, loadProjects, isLoading } = useProjectStore();
   const { user } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
 
   const stats = {
     total: projects.length,

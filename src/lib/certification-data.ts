@@ -17,7 +17,7 @@ export interface Criterion {
   maxPoints: number;
   requirements: string;
   documents: string[];
-  selectionType: "checkbox" | "dropdown" | "multiple-checkbox";
+  selectionType: "checkbox" | "single-checkbox" | "dropdown" | "multiple-checkbox";
   options?: CriterionOption[];
   hasOtherOption?: boolean;
 }
@@ -30,6 +30,21 @@ export interface StandardData {
   mandatoryCriteria: Criterion[];
   creditCriteria: Criterion[];
 }
+
+export const getStandardData = (standard: string, buildingType: string): StandardData => {
+  if (standard === "NEST PLUS" && buildingType === "New") {
+    return nestPlusNewBuilding;
+  } else if (standard === "NEST PLUS" && buildingType === "Existing") {
+    return nestPlusExistingBuilding;
+  } else if (standard === "NEST" && buildingType === "New") {
+    return nestNewBuilding;
+  } else if (standard === "NEST" && buildingType === "Existing") {
+    return nestExistingBuilding;
+  }
+  
+  // Default fallback
+  return nestPlusNewBuilding;
+};
 
 // NEST PLUS - New Building
 export const nestPlusNewBuilding: StandardData = {
@@ -50,7 +65,7 @@ export const nestPlusNewBuilding: StandardData = {
       maxPoints: 0,
       requirements: "Approved Plan from local municipal authority.",
       documents: ["Municipal approval document", "Building plan"],
-      selectionType: "checkbox"
+      selectionType: "single-checkbox"
     },
     {
       id: "np-waste-segregation",
@@ -59,7 +74,7 @@ export const nestPlusNewBuilding: StandardData = {
       maxPoints: 0,
       requirements: "Provide 2 separate bins to collect dry and wet waste.",
       documents: ["Photos of waste segregation bins"],
-      selectionType: "checkbox"
+      selectionType: "single-checkbox"
     },
     {
       id: "np-rainwater-harvesting-500l",
@@ -68,7 +83,7 @@ export const nestPlusNewBuilding: StandardData = {
       maxPoints: 0,
       requirements: "Rainwater harvesting system to capture at least 500 litres from the entire site area runoff. Or Project can have rainwater harvesting pit to capture run-off from roof.",
       documents: ["Photos of rainwater harvesting system", "Technical drawings"],
-      selectionType: "checkbox"
+      selectionType: "single-checkbox"
     }
   ],
   creditCriteria: [
@@ -92,10 +107,7 @@ export const nestPlusNewBuilding: StandardData = {
       maxPoints: 1,
       requirements: "Preserve top 150-200 mm soil during excavation.",
       documents: ["Photos of preserved topsoil", "Soil preservation certificate"],
-      selectionType: "checkbox",
-      options: [
-        { label: "Achieved", value: "achieved", points: 1 }
-      ]
+      selectionType: "single-checkbox"
     },
     {
       id: "np-passive-architecture-setbacks",
@@ -158,10 +170,7 @@ export const nestPlusNewBuilding: StandardData = {
       maxPoints: 1,
       requirements: "Grow a minimum of 5 indoor plants.",
       documents: ["Photos of indoor plants"],
-      selectionType: "checkbox",
-      options: [
-        { label: "Achieved", value: "achieved", points: 1 }
-      ]
+      selectionType: "single-checkbox"
     },
     {
       id: "np-e-vehicle",
@@ -170,10 +179,7 @@ export const nestPlusNewBuilding: StandardData = {
       maxPoints: 1,
       requirements: "Use atleast one of the following vehicle type: E vehicle, CNG based, LPG based, or any other renewable fuel based vehicle.",
       documents: ["Vehicle registration certificate", "Photos of vehicle"],
-      selectionType: "checkbox",
-      options: [
-        { label: "Achieved", value: "achieved", points: 1 }
-      ]
+      selectionType: "single-checkbox"
     },
     {
       id: "np-water-saving-fixtures",
@@ -303,10 +309,7 @@ export const nestPlusExistingBuilding: StandardData = {
       maxPoints: 1,
       requirements: "Grow at least 2 varieties of vegetables or fruits.",
       documents: ["Photos of vegetable/fruit plants"],
-      selectionType: "checkbox",
-      options: [
-        { label: "Achieved", value: "achieved", points: 1 }
-      ]
+      selectionType: "single-checkbox"
     },
     {
       id: "np-medicinal-plants",
@@ -315,10 +318,7 @@ export const nestPlusExistingBuilding: StandardData = {
       maxPoints: 1,
       requirements: "Grow at least 2 varieties of medicinal plants.",
       documents: ["Photos of medicinal plants"],
-      selectionType: "checkbox",
-      options: [
-        { label: "Achieved", value: "achieved", points: 1 }
-      ]
+      selectionType: "single-checkbox"
     },
     // Include other applicable criteria from new building with modified points
     ...nestPlusNewBuilding.creditCriteria.filter(c => 
@@ -386,7 +386,7 @@ export const nestNewBuilding: StandardData = {
       maxPoints: 0,
       requirements: "Approved Plan from local municipal authority.",
       documents: ["Municipal approval document", "Building plan"],
-      selectionType: "checkbox"
+      selectionType: "single-checkbox"
     },
     {
       id: "n-waste-segregation",
@@ -395,7 +395,7 @@ export const nestNewBuilding: StandardData = {
       maxPoints: 0,
       requirements: "Provide 2 separate bins to collect dry and wet waste.",
       documents: ["Photos of waste segregation bins"],
-      selectionType: "checkbox"
+      selectionType: "single-checkbox"
     }
   ],
   creditCriteria: [
@@ -479,10 +479,7 @@ export const nestExistingBuilding: StandardData = {
       maxPoints: 2,
       requirements: "All exterior openings shall have sun shades/ chajjas of minimum 400 MM.",
       documents: ["Photos of sunshades/chajjas"],
-      selectionType: "checkbox",
-      options: [
-        { label: "Achieved", value: "achieved", points: 2 }
-      ]
+      selectionType: "single-checkbox"
     }
   ]
 };

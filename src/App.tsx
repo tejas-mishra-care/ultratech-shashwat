@@ -10,6 +10,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { NewProjectPage } from "./pages/NewProjectPage";
+import { ProjectFormPage } from "./pages/ProjectFormPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <NewProjectPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/project/:id" 
+              element={
+                <ProtectedRoute>
+                  <ProjectFormPage />
                 </ProtectedRoute>
               } 
             />
